@@ -20,7 +20,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y zip unzip openjdk-17-jdk python3-pip libffi-dev libssl-dev libsqlite3-dev zlib1g-dev libncurses5
+          sudo apt install -y zip unzip openjdk-17-jdk python3-pip libffi-dev libssl-dev libsqlite3-dev zlib1g-dev libncurses5 git
 
       - name: Install Buildozer
         run: |
@@ -28,8 +28,16 @@ jobs:
           pip install cython
           pip install buildozer
 
+      - name: Check OpenCV Files Exist
+        run: |
+          test -f libs/opencv-android.jar
+          test -f libs/armeabi-v7a/libopencv_java4.so
+          test -f libs/arm64-v8a/libopencv_java4.so
+
       - name: Build APK
         run: |
+          set -e
+          buildozer android clean
           buildozer android debug
 
       - name: Upload APK
